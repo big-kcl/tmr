@@ -12,11 +12,11 @@
 ##############################################################
 
 data:CBAspirinGIB_head {
-	  data:CBAspirinGIB_nanopub
+	data:CBAspirinGIB_nanopub
         a                             nanopub:Nanopublication ;
         nanopub:hasAssertion          data:CBAspirinGIB ;
         nanopub:hasProvenance         data:CBAspirinGIB_provenance ;
-		    nanopub:hasPublicationInfo    data:CBAspirinGIB_publicationinfo .
+		nanopub:hasPublicationInfo    data:CBAspirinGIB_publicationinfo .
 }
 
 data:CBAspirinGIB {
@@ -84,12 +84,12 @@ data:CBIbuprofenPain_head {
         a                             nanopub:Nanopublication ;
         nanopub:hasAssertion          data:CBIbuprofenPain ;
         nanopub:hasProvenance         data:CBIbuprofenPain_provenance ;
-		    nanopub:hasPublicationInfo    data:CBIbuprofenPain_publicationinfo .
+		nanopub:hasPublicationInfo    data:CBIbuprofenPain_publicationinfo .
 }
 
 data:CBIbuprofenPain {
     data:ActAdministerIbuprofen
-				vocab:causes 									data:TrPainkiller .
+		vocab:causes data:TrPainkiller .
     data:CBIbuprofenPain
         a                             vocab:CausationBelief ;
         vocab:strength                "L1"^^xsd:string;
@@ -109,6 +109,41 @@ data:CBIbuprofenPain_publicationinfo {
     data:CBIbuprofenPain_nanopub
         prov:generatedAtTime          "2015-10-01"^^xsd:dateTime ;
 		    prov:wasAttributedTo          data:Veruska.
+}
+
+
+##############################################################
+
+data:CBIbuprofenBP_head {
+	  data:CBIbuprofenBP_nanopub
+        a                             nanopub:Nanopublication ;
+        nanopub:hasAssertion          data:CBIbuprofenBP ;
+        nanopub:hasProvenance         data:CBIbuprofenBP_provenance ;
+		nanopub:hasPublicationInfo    data:CBIbuprofenBP_publicationinfo .
+}
+
+data:CBIbuprofenBP {
+    data:ActAdministerIbuprofen
+		vocab:causes data:TrIncreaseBP .
+    data:CBIbuprofenBP
+        a                             vocab:CausationBelief ;
+        vocab:strength                "L1"^^xsd:string;
+        vocab:frequency               "always"^^xsd:string.
+}
+
+data:CBIbuprofenBP_provenance {
+    data:CBIbuprofenBP_provenance
+        a                             oa:Annotation ;
+        oa:hasBody                    data:CBIbuprofenBP ;
+        oa:hasTarget                  [ oa:hasSource <http://hdl.handle.net/10222/43703> ] .
+    data:CBIbuprofenBP
+        prov:wasDerivedFrom           <http://hdl.handle.net/10222/43703> .
+}
+
+data:CBIbuprofenBP_publicationinfo {
+    data:CBIbuprofenBP_nanopub
+        prov:generatedAtTime          "2015-10-01"^^xsd:dateTime ;
+		    prov:wasAttributedTo          data:Martin.
 }
 
 ##############################################################

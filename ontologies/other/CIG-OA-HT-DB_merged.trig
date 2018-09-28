@@ -22,7 +22,7 @@
         a                             nanopub:Nanopublication ;
         nanopub:hasAssertion          :RecOA-HT-DB-AntiThrombotic1 ;
         nanopub:hasProvenance         :RecOA-HT-DB-AntiThrombotic1_provenance ;
-		    nanopub:hasPublicationInfo    :RecOA-HT-DB-AntiThrombotic1_publicationinfo .
+		nanopub:hasPublicationInfo    :RecOA-HT-DB-AntiThrombotic1_publicationinfo .
 }
 
 :RecOA-HT-DB-AntiThrombotic1 {
@@ -157,6 +157,42 @@
 		    prov:wasAttributedTo          :Veruska.
 }
 
+
+##############################################################
+
+:RecOA-HT-DB-Diuretic2_head {
+	  :RecOA-HT-DB-Diuretic2_nanopub
+        a                             nanopub:Nanopublication ;
+        nanopub:hasAssertion          :RecOA-HT-DB-Diuretic2 ;
+        nanopub:hasProvenance         :RecOA-HT-DB-Diuretic2_provenance ;
+		    nanopub:hasPublicationInfo    :RecOA-HT-DB-Diuretic2_publicationinfo .
+}
+
+:RecOA-HT-DB-Diuretic2 {
+    :RecOA-HT-DB-Diuretic2
+        a                             vocab:ClinicalRecommendation ;
+        rdfs:label                    "Avoid high blood pressure"@en ;
+        vocab:strength                "should-not"^^xsd:string ;
+        vocab:partOf                  :CIG-OA-HT-DB ;
+        vocab:aboutExecutionOf        :ActAdministerIbuprofen;
+        vocab:basedOn                 :CBIbuprofenBP .
+}
+
+:RecOA-HT-DB-Diuretic2_provenance {
+    :RecOA-HT-DB-Diuretic2_provenance
+        a                             oa:Annotation ;
+        oa:hasBody                    :RecOA-HT-DB-Diuretic2 ;
+        oa:hasTarget                  [ oa:hasSource <http://hdl.handle.net/10222/43703> ] .
+    :RecOA-HT-DB-Diuretic
+        prov:wasDerivedFrom           <http://hdl.handle.net/10222/43703> .
+}
+
+:RecOA-HT-DB-Diuretic2_publicationinfo {
+    :RecOA-HT-DB-Diuretic2_nanopub
+        prov:generatedAtTime          "2015-10-01"^^xsd:dateTime ;
+		    prov:wasAttributedTo          :Martin.
+}
+
 ##############################################################
 
 ##############################################################
@@ -237,7 +273,7 @@
         a                             nanopub:Nanopublication ;
         nanopub:hasAssertion          :RecOA-HT-DB-Painkiller ;
         nanopub:hasProvenance         :RecOA-HT-DB-Painkiller_provenance ;
-		    nanopub:hasPublicationInfo    :RecOA-HT-DB-Painkiller_publicationinfo .
+		nanopub:hasPublicationInfo    :RecOA-HT-DB-Painkiller_publicationinfo .
 }
 
 :RecOA-HT-DB-Painkiller {
