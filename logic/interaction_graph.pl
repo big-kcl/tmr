@@ -185,7 +185,7 @@ ext_transition_node(transition(TR, Quantity,Before,Action,After),
 
 ext_label(TR, Label, HREF) :-
     rdf(TR, prov:'wasDerivedFrom', Source),
-	rdf(Source, rdfs:label, literal(type(xsd:string, Label))),
+	rdf(Source, rdfs:label, literal(Label)),
     rdf(TR, prov:'wasGeneratedBy', ActivityExtResources),
     cliopatria_href(ActivityExtResources, HREF).
 ext_label(_TR, "External", '').

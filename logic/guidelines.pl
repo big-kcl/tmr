@@ -1,9 +1,9 @@
 /*
 
-This code provides the SWI-Prolog implementation of the rules described in 
+This code provides the SWI-Prolog implementation of the rules described in
 the paper named:
 "..."
- 
+
 It provides as data the three guidelines provided as case study in that paper:
 Osteoarthritis (OA), Diabetes (DB), and Hypertension (HT)
 
@@ -22,7 +22,7 @@ Osteoarthritis (OA), Diabetes (DB), and Hypertension (HT)
 /* *********************************** */
 %  EVENT_TYPE-BASED RULES
 /* *********************************** */
-% 
+%
 inverseTo(TransitionT1, TransitionT2) :-
 	rdfs_individual_of(TransitionT1, vocab:'TransitionType'),
 	rdfs_individual_of(TransitionT2, vocab:'TransitionType'),
@@ -33,15 +33,15 @@ inverseTo(TransitionT1, TransitionT2) :-
     different(TransitionT1, TransitionT2).
 
 /* *********************************** */
-% relatedTypes(Type1, Type2)    
+% relatedTypes(Type1, Type2)
 % check if two types are the same or subsuming one another
 relatedTypes(Type1, Type2) :-
     (   same(Type1, Type2) ->  true
     ;
         subsumes(Type1, Type2) ->  true
-    ;   
+    ;
         subsumes(Type2, Type1) ->  true
-    ;   
+    ;
         (subsumes(Type1, Type3),
          same(Type3, Type2) )
     ).
@@ -87,7 +87,7 @@ subsumesViaGroupingCriterias(EventType1, EventType2, CBelief) :-
     rdf(EventType1, vocab:'hasGroupingCriteria', _),
     different(EventType1, EventType2),
     forall(
-        % The grouping criterias can be both a promoted Effect or 
+        % The grouping criterias can be both a promoted Effect or
         % a structural super-type (e.g. administration of non-steroidal)
         rdf(EventType1, vocab:'hasGroupingCriteria', Type),
         (causes(EventType2, Type, 'always', CBelief)
@@ -97,14 +97,14 @@ subsumesViaGroupingCriterias(EventType1, EventType2, CBelief) :-
     %EventType1 \= EventType2,
     %\+ rdf(EventType1, owl:sameAs, EventType2),
     %\+ rdf(EventType2, owl:sameAs, EventType1).
-    
+
 /* *********************************** */
 %  BELIEF-BASED RULES
 /* *********************************** */
 
 causes(EventT1, EventT2, Frequency, CBelief) :-
     rdfs_individual_of(CBelief, vocab:'CausationBelief'),
-    rdf(CBelief, vocab:'frequency', literal(type(xsd:string, Frequency)), CBelief),
+    rdf(CBelief, vocab:'frequency', literal(Frequency), CBelief),
     rdf(EventT1, vocab:'causes', EventT2, CBelief).
 causes(EventT1, EventT2, Frequency, CBelief, Source) :-
     causes(EventT1, EventT2, Frequency, CBelief),
@@ -129,11 +129,11 @@ incompatibleWith(EventT1, EventT2, IBelief) :-
 
 regulates(Reg, Norm, ActionT, Strength, CBelief) :-
     rdfs_individual_of(Norm, vocab:'Norm'),
-    rdf(Norm, vocab:'partOf', Reg, Norm), 
-    rdf(Norm, vocab:'strength', literal(type(xsd:string, Strength)), Norm),
+    rdf(Norm, vocab:'partOf', Reg, Norm),
+    rdf(Norm, vocab:'strength', literal(Strength), Norm),
     rdf(Norm, vocab:'basedOn', CBelief, Norm),
     rdf(Norm, vocab:'aboutExecutionOf', ActionT, Norm).
-    
+
 
 /* *********************************** */
 %  ASSERTIONS
@@ -144,14 +144,14 @@ regulates(Reg, Norm, ActionT, Strength, CBelief) :-
 % ** Assert a causation belief
 assertCausation2(CauseTURI, EffectTURI, Frequency, SourceURI) :-
 	assertCausation2(CauseTURI, EffectTURI, Frequency, SourceURI, _).
-    
+
 assertCausation2(CauseTURI, EffectTURI, Frequency, SourceURI, NanopubURI) :-
     (   %check if causation is already asserted for the source
-    	rdf(CauseTURI, vocab:'causes', EffectTURI, BeliefURI:_), 
-		rdf(BeliefURI, vocab:'frequency', literal(type(xsd:string, Frequency))),
+    	rdf(CauseTURI, vocab:'causes', EffectTURI, BeliefURI:_),
+		rdf(BeliefURI, vocab:'frequency', literal(Frequency)),
 		rdf(BeliefURI, prov:'wasDerivedFrom', SourceURI),
 	    rdfs_individual_of(BeliefURI, vocab:'CausationBelief')  ->   true
-    ;   
+    ;
         % composing new URI for nanopublication
         rdf_global_id(data:ID1, CauseTURI),
         rdf_global_id(data:ID2, EffectTURI),
@@ -164,7 +164,7 @@ assertCausation2(CauseTURI, EffectTURI, Frequency, SourceURI, NanopubURI) :-
     	rdf(NanopubURI, nanopub:'hasAssertion', AssertionURI),
         rdf_assert(AssertionURI, rdf:type, vocab:'CausationBelief', AssertionURI),
         rdf_assert(CauseTURI, vocab:'causes', EffectTURI, AssertionURI),
-        rdf_assert(AssertionURI, vocab:'frequency', literal(type(xsd:string, Frequency)), AssertionURI),
+        rdf_assert(AssertionURI, vocab:'frequency', literal(Frequency), AssertionURI),
         % asserting the provenance
         assertProvSource(NanopubURI, SourceURI)
     ).
@@ -181,7 +181,7 @@ assertIncompatibility(EventTURI1, EventTURI2, SourceURI, NanopubURI) :-
 		rdf(Belief, prov:'wasDerivedFrom', SourceURI),
         rdf_global_id(vocab:'IncompatibilityBelief', IBType),
    		instanceOf(Belief, IBType)  ->   true
-    ;   
+    ;
         % composing new URI for belief
         rdf_global_id(data:ID1, EventTURI1),
         rdf_global_id(data:ID2, EventTURI2),
@@ -205,7 +205,7 @@ assertIncompatibilityMultiEvents(EventTypeListURI, SourceURI) :-
 		rdfs_individual_of(Belief, vocab:'IncompatibilityBelief'),
     	foreach(member((EventTypeURI,_), EventTypeListURI),
 			rdf(Belief, vocab:'isAbout', EventTypeURI, Belief:_)) -> true
-    ; 
+    ;
     	% >>> make a name for the belief: compose all events' names??
         rdf_global_id(data:SourceID, SourceURI),
         random_between(0,1000000,R),
@@ -230,7 +230,7 @@ updateIncompatibility2(EventTURI1, EventTURI2, SituationURI, SourceURI) :-
          rdf(EventTURI2, vocab:'incompatibleWith', EventTURI1, Belief:_)),
 		rdf(Belief, prov:'wasDerivedFrom', SourceURI),
    		rdfs_individual_of(Belief, vocab:'IncompatibilityBelief')  ->   true
-    ;   
+    ;
         % composing new URI for belief
         rdf_global_id(data:ID1, EventTURI1),
         rdf_global_id(data:ID2, EventTURI2),
@@ -256,21 +256,21 @@ updateIncompatibility2(EventTURI1, EventTURI2, SituationURI, SourceURI) :-
           	rdf_assert(EventTURI2, vocab:'partOf', ComposedActionURI)
           )
         ),
-        % assert a transition that has post situation SituationURI           
+        % assert a transition that has post situation SituationURI
         rdf_global_id(data:SituationID, SituationURI),
        	concat_atom(['TrIB', ID1, ID2, SituationID, SourceID], EffectID),
         rdf_global_id(data:EffectID, EffectTURI),
-    	% assert a causation 
+    	% assert a causation
         rdf_assert(AssertionURI, rdf:type, vocab:'CausationBelief', AssertionURI),
         rdf_assert(ComposedActionURI, vocab:'causes', EffectTURI, AssertionURI),
-        rdf_assert(EffectTURI, vocab:'hasExpectedSituation', SituationURI, AssertionURI)    	 
+        rdf_assert(EffectTURI, vocab:'hasExpectedSituation', SituationURI, AssertionURI)
     ).
 
 
 assertTransition(TransformableSituation, ExpectedSituation, Transition) :-
     (   rdf(Transition, vocab:'hasTransformableSituation', TransformableSituation),
 		rdf(Transition, vocab:'hasExpectedSituation', ExpectedSituation) ->   true
-    ;   
+    ;
         % composing new URI for transition
 		(rdf_global_id(data:ID1, TransformableSituation),
         rdf_global_id(data:ID2, ExpectedSituation),
@@ -296,7 +296,3 @@ assertPartialTransition(ExpectedSituation, Transition) :-
 %:- forall(
 %      rdf(EventType, vocab:'hasGroupingCriteria', TrType),
 %	  assertCausation(EventType, TrType, 'always', 'None')).
-
-
-
-
